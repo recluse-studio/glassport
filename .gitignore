@@ -1,0 +1,30 @@
+# Local captures and device state contain private material.
+.env
+.env.*
+!.env.example
+runtime/
+private-evidence/
+exports/
+.local/
+.build/
+DerivedData/
+node_modules/
+dist/
+coverage/
+*.mobileprovision
+*.p12
+*.p8
+*.key
+*.xcresult/
+.DS_Store
+__pycache__/
+
+# Local release archives and historical/private execution material.
+.release/
+WORKLOG.md
+records/doctor-current.txt
+# Retain copied research privately; publish authored specifications only.
+specs/**/sources/
+specs/**/upstream/
+specs/**/source-snapshots/
+specs/**/native-route-sources/

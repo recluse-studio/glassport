@@ -1,0 +1,23 @@
+{
+  "name": "glassport",
+  "interface": {
+    "displayName": "Glassport"
+  },
+  "plugins": [
+    {
+      "name": "glassport",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "interface": {
+        "displayName": "Glassport"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Productivity"
+    }
+  ]
+}

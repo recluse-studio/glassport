@@ -1,0 +1,52 @@
+{
+  "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
+  "name": "glassport",
+  "version": "0.1.0",
+  "description": "Control a paired iPad in a local browser and bring native text, sketches and exported files into Codex.",
+  "author": {
+    "name": "Recluse Studio",
+    "url": "https://github.com/recluse-studio"
+  },
+  "homepage": "https://github.com/recluse-studio/glassport",
+  "repository": "https://github.com/recluse-studio/glassport",
+  "license": "MIT AND GPL-3.0-or-later",
+  "keywords": [
+    "ipad",
+    "notes",
+    "browser",
+    "clipboard",
+    "local"
+  ],
+  "extensions": {
+    "com.openai": {
+      "interface": {
+        "displayName": "Glassport",
+        "shortDescription": "Your iPad in Codex",
+        "longDescription": "Bring a paired physical iPad into a local browser pane. See and control its apps, type from your laptop, paste Unicode and multiline text, retrieve native copied text, capture sketches and notes, and import supported app exports. Glassport runs locally on an Apple Silicon Mac and uses a trusted iPad with iPadOS 27 or later and Developer Mode. Tailscale connects the paired devices; first-time pairing may require a one-time USB trust step. The Codex skill operates the same browser interface as the user. Private device state, pairing records and exports remain in the local installation. Audio and distinct-network routed operation are not certified in this preview. No OCR or emulator is used. Original project code is MIT; the adapted native bridge retains GPL-3.0-or-later.",
+        "developerName": "Recluse Studio",
+        "category": "Productivity",
+        "capabilities": [
+          "Display and control a physical iPad",
+          "Type and paste into iPad apps",
+          "Retrieve native copied text",
+          "Capture sketches and notes",
+          "Import supported iPad exports"
+        ],
+        "websiteURL": "https://github.com/recluse-studio/glassport",
+        "supportURL": "https://github.com/recluse-studio/glassport/issues",
+        "defaultPrompt": [
+          "Use Glassport to open my iPad.",
+          "Bring my iPad note into this task."
+        ],
+        "brandColor": "#176B58",
+        "composerIcon": "./assets/glassport.svg",
+        "logo": "./assets/glassport.svg",
+        "privacyPolicyURL": "https://github.com/recluse-studio/glassport/blob/main/docs/PRIVACY.md",
+        "termsOfServiceURL": "https://github.com/recluse-studio/glassport/blob/main/docs/TERMS.md"
+      },
+      "publication": {
+        "release_notes": "Initial local preview: physical iPad browser display/control, laptop typing, native copy/paste, captures, ordered notes and verified export transfer."
+      }
+    }
+  }
+}
