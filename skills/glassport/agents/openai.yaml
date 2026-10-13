@@ -1,0 +1,4 @@
+interface:
+  display_name: "Glassport"
+  short_description: "Control an iPad and bring its notes into Codex"
+  default_prompt: "Use $glassport to open my iPad and bring a note into this chat."
