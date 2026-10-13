@@ -12,6 +12,7 @@ if not re.fullmatch(r'\d+\.\d+\.\d+', version):
     raise SystemExit('The plugin version must have three numeric components.')
 selected = {
     'plugin.json', 'mcp.json', 'README.md', 'AGENTS.md', 'CONTRIBUTING.md',
+    'assets/launch/glassport-splattercore.png',
     'LICENSE', 'THIRD_PARTY_NOTICES.md', 'package.json', 'package-lock.json',
     'tsconfig.json', '.gitignore',
     'docs/RUNBOOK.md', 'docs/PLUGIN.md', 'docs/PRIVACY.md', 'docs/TERMS.md',
