@@ -1,5 +1,5 @@
 import test from 'node:test';import assert from 'node:assert/strict';import {randomUUID} from 'node:crypto';import http from 'node:http';
-const origin='http://127.0.0.1:43180';
+const origin=process.env.GLASSPORT_TEST_ORIGIN??'http://127.0.0.1:43180';
 test('Actual loopback service rejects missing sessions, forged origins/Host and missing CSRF before device dispatch',async()=>{
   const unauth=await fetch(origin+'/api/state');assert.equal(unauth.status,401);
   const host=await new Promise<number|undefined>((resolve,reject)=>{const req=http.get(origin+'/',{headers:{Host:'evil.example'}},res=>{res.resume();resolve(res.statusCode);});req.on('error',reject);});assert.equal(host,403);

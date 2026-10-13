@@ -30630,6 +30630,7 @@ var LocalGlassport = class {
     this.configuration = join(homedir(), ".local", "share", "glassport", "mcp-workspace.json");
   }
   async load() {
+    if (process.env.GLASSPORT_WORKSPACE) return;
     try {
       const saved = JSON.parse(await readFile(this.configuration, "utf8"));
       if (typeof saved.workspace === "string") this.root = resolve(saved.workspace);
@@ -30724,7 +30725,7 @@ var LocalGlassport = class {
 
 // apps/mcp/server.ts
 function createServer(client = new LocalGlassport()) {
-  const server = new McpServer({ name: "glassport", version: "0.2.0" }, { maxToolInputElements: 128 });
+  const server = new McpServer({ name: "glassport", version: "0.2.1" }, { maxToolInputElements: 128 });
   let pending = 0;
   const readonly2 = { readOnlyHint: true, destructiveHint: false, idempotentHint: true, openWorldHint: false };
   const localWrite = { readOnlyHint: false, destructiveHint: false, idempotentHint: false, openWorldHint: false };

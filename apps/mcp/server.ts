@@ -8,7 +8,7 @@ import {LocalGlassport} from './client.ts';
 import {GlassportError} from '../../packages/contracts/core.ts';
 
 export function createServer(client=new LocalGlassport()){
-  const server=new McpServer({name:'glassport',version:'0.2.0'},{maxToolInputElements:128});let pending=0;
+  const server=new McpServer({name:'glassport',version:'0.2.1'},{maxToolInputElements:128});let pending=0;
   const readonly={readOnlyHint:true,destructiveHint:false,idempotentHint:true,openWorldHint:false};
   const localWrite={readOnlyHint:false,destructiveHint:false,idempotentHint:false,openWorldHint:false};
   const deviceWrite={readOnlyHint:false,destructiveHint:true,idempotentHint:false,openWorldHint:false};

@@ -2,7 +2,7 @@ import {createRequire} from 'node:module';
 import {createHash} from 'node:crypto';
 import {readFile} from 'node:fs/promises';
 import {GlassportError} from '../contracts/core.ts';
-const require=createRequire(new URL('../../node_modules/appium-xcuitest-driver/package.json',import.meta.url));
+const require=createRequire(import.meta.url);
 const ios=require('appium-ios-device');
 export type Device={device_ref:string;name:string;os_version:string|null;model:string|null;transport:string;setup_status:string;udid:string;wdaUrl?:string;apps?:Record<string,string>;privateIngressVerified?:boolean;preinstalledWda?:boolean;nativeNetwork?:{host:string;port:number}};
 export function deviceRef(udid:string){return createHash('sha256').update(udid).digest('hex').slice(0,20);}

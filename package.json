@@ -1,6 +1,6 @@
 {
   "name": "glassport",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "private": true,
   "type": "module",
   "description": "Local browser control and information retrieval for a paired iPad",
@@ -9,7 +9,7 @@
   },
   "scripts": {
     "start": "node --experimental-strip-types apps/server/server.ts",
-    "test": "node --experimental-strip-types --test tests/*.test.ts tests/*.test.js",
+    "test": "node scripts/test.mjs",
     "typecheck": "tsc --noEmit",
     "doctor": "node --experimental-strip-types scripts/doctor.ts",
     "mcp": "node apps/mcp/glassport.mjs",
@@ -19,12 +19,16 @@
   "dependencies": {
     "@modelcontextprotocol/sdk": "1.32.1",
     "appium": "3.8.0",
-    "appium-xcuitest-driver": "12.17.3",
-    "zod": "4.3.6"
+    "shell-quote": "1.12.0",
+    "zod": "4.3.6",
+    "appium-ios-device": "3.1.24"
   },
   "devDependencies": {
     "@types/node": "24.10.1",
     "esbuild": "0.28.2",
     "typescript": "5.9.3"
+  },
+  "overrides": {
+    "shell-quote": "1.12.0"
   }
 }

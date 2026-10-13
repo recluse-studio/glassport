@@ -28,3 +28,10 @@ specs/**/sources/
 specs/**/upstream/
 specs/**/source-snapshots/
 specs/**/native-route-sources/
+
+# Private research, operational receipts and local specification tooling.
+records/
+specs/
+handoff/
+.specify/
+.agents/skills/
