@@ -13,10 +13,12 @@ import {discoverTailnet} from '../../packages/device/tailscale.ts';
 import {nativeReadiness} from '../../packages/device/native-readiness.ts';
 import type {Device} from '../../packages/device/discovery.ts';
 import {DeviceSession} from './session.ts';
+import {McpAccess} from '../../packages/contracts/mcp-auth.ts';
 const root=resolve(fileURLToPath(new URL('../..',import.meta.url)));
 const port=Number(process.env.GLASSPORT_PORT??43180);const origin=`http://127.0.0.1:${port}`;
 const session=new DeviceSession(new NativeDevice(root));const artifacts=new ArtifactStore(join(root,'exports'));
 const controllers=new Map<string,{id:string;csrf:string;expires:number}>();let devices:Device[]=[];
+const mcpAccess=new McpAccess();
 const collections=new Map<string,{chunks:any[];created_at:string}>();
 await mkdir(join(root,'runtime'),{recursive:true,mode:0o700});
 function json(res:http.ServerResponse,status:number,value:unknown){res.writeHead(status,{'Content-Type':'application/json; charset=utf-8','Cache-Control':'no-store'});res.end(JSON.stringify(value));}
@@ -34,10 +36,10 @@ const server=http.createServer(async(req,res)=>{try{
     if(path==='/'){let auth;try{auth=authentication(req);}catch{const token=randomBytes(32).toString('hex');auth={id:randomUUID(),csrf:randomBytes(24).toString('hex'),expires:Date.now()+12*60*60*1000};while(controllers.size>16)controllers.delete(controllers.keys().next().value!);controllers.set(token,auth);res.setHeader('Set-Cookie',`glassport=${token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=43200`);}}
     const entry=staticFiles[path];const file=await readFile(join(root,'apps/web',entry.file));res.writeHead(200,{'Content-Type':entry.type,'Cache-Control':'no-store'});res.end(file);return;
   }
-  if(path==='/health'&&req.method==='GET'){json(res,200,{application:'Glassport',version:'0.1.0',listener:origin});return;}
-  const auth=controller(req);
+  if(path==='/health'&&req.method==='GET'){json(res,200,{application:'Glassport',version:'0.2.0',listener:origin});return;}
+  const auth=req.headers['x-glassport-mcp']!==undefined?mcpAccess.controller(req.headers['x-glassport-mcp'],path,req.method??'GET',session.owner):controller(req);
   if(req.method!=='GET') {if(req.headers.origin!==origin||req.headers['x-glassport-csrf']!==auth.csrf)throw new GlassportError('INVALID_ORIGIN','The controller request is missing its origin or CSRF protection.',403);}
-  if(path==='/api/bootstrap'&&req.method==='GET'){json(res,200,{version:'0.1.0',csrf:auth.csrf,controller_id:auth.id,session:{...session.public(),is_owner:session.owner===auth.id}});return;}
+  if(path==='/api/bootstrap'&&req.method==='GET'){json(res,200,{version:'0.2.0',csrf:auth.csrf,controller_id:auth.id,session:{...session.public(),is_owner:session.owner===auth.id}});return;}
   if(path==='/api/devices'&&req.method==='GET'){const inventory=await availableDevices();devices=inventory.devices;const tailnet=inventory.tailnet;json(res,200,{devices:devices.map(publicDevice),tailnet,setup_hint:devices.length?'Select your verified physical iPad.':tailnet.candidates.some(p=>p.online)?'An Apple mobile tailnet peer is online. Its iPad identity and control helper must be verified before connecting.':'Tailscale finds no online Apple mobile device. Open Tailscale on the iPad and connect it to this tailnet.'});return;}
   if(path==='/api/state'&&req.method==='GET'){json(res,200,{...session.public(),is_owner:session.owner===auth.id});return;}
   if(path==='/api/native-readiness'&&req.method==='POST'){const input=await body(req);devices=(await availableDevices()).devices;const device=devices.find(d=>d.device_ref===input.device_ref);if(!device?.udid)throw new GlassportError('DEVICE_UNAVAILABLE','Select the trusted physical iPad for a native readiness check.',409);json(res,200,await nativeReadiness(root,device.udid));return;}
@@ -65,10 +67,10 @@ const server=http.createServer(async(req,res)=>{try{
   if(path==='/api/artifacts'&&req.method==='GET'){json(res,200,{artifacts:await artifacts.list()});return;}
   if(path.startsWith('/api/artifacts/')&&req.method==='GET'){const id=path.split('/').at(-1)!;const {item,data}=await artifacts.get(id);const name=item.filename??`glassport-${item.artifact_id}.${item.extension??'bin'}`;const fallback=name.replace(/[^\x20-\x7e]|["\\]/g,'_');const encoded=encodeURIComponent(name).replace(/[!'()*]/g,c=>`%${c.charCodeAt(0).toString(16).toUpperCase()}`);res.writeHead(200,{'Content-Type':item.media_type,'Cache-Control':'no-store','Content-Disposition':`${item.kind==='device_file'?'attachment':'inline'}; filename="${fallback}"; filename*=UTF-8''${encoded}`});res.end(data);return;}
   if(path==='/api/clear'&&req.method==='POST'){session.assertOwner(auth.id);collections.clear();json(res,200,{cleared:true,saved_artifacts_preserved:true});return;}
-  if(path==='/api/diagnostics'&&req.method==='GET'){let adapter_status='UNAVAILABLE',adapter_details=null;try{adapter_details=await session.adapter.request('/status', 'GET',undefined,3000);adapter_status='AVAILABLE';}catch{}json(res,200,{application:'Glassport',version:'0.1.0',listener:origin,adapter:session.adapter instanceof NativeDevice?'native_coredevice':'appium',adapter_status,adapter_details,session:session.public(),mock_adapter:false,device_count:devices.length,storage_root:root,setup_requirements:'The native route requires a trusted actual iPad with Developer Mode, device support data and iPadOS27 or later. Network reachability alone does not enable control.'});return;}
+  if(path==='/api/diagnostics'&&req.method==='GET'){let adapter_status='UNAVAILABLE',adapter_details=null;try{adapter_details=await session.adapter.request('/status', 'GET',undefined,3000);adapter_status='AVAILABLE';}catch{}json(res,200,{application:'Glassport',version:'0.2.0',listener:origin,adapter:session.adapter instanceof NativeDevice?'native_coredevice':'appium',adapter_status,adapter_details,session:session.public(),mock_adapter:false,device_count:devices.length,storage_root:root,setup_requirements:'The native route requires a trusted actual iPad with Developer Mode, device support data and iPadOS27 or later. Network reachability alone does not enable control.'});return;}
   throw new GlassportError('NOT_FOUND','This operation does not exist.',404);
 }catch(error){if(!res.headersSent)json(res,error instanceof GlassportError?error.httpStatus:500,{error:formatError(error)});else res.end();}});
 server.on('error',(error:NodeJS.ErrnoException)=>{console.error(error.code==='EADDRINUSE'?`Glassport port ${port} is already occupied.`:'Glassport could not start.');process.exitCode=1;});
-server.listen(port,'127.0.0.1',async()=>{await writeFile(join(root,'runtime/server.json'),JSON.stringify({pid:process.pid,version:'0.1.0',origin,started_at:new Date().toISOString()})+'\n',{mode:0o600});console.log(`Glassport 0.1.0 ready at ${origin}`);});
+server.listen(port,'127.0.0.1',async()=>{await mcpAccess.publish(root,origin);await writeFile(join(root,'runtime/server.json'),JSON.stringify({pid:process.pid,version:'0.2.0',origin,started_at:new Date().toISOString()})+'\n',{mode:0o600});console.log(`Glassport 0.2.0 ready at ${origin}`);});
 async function shutdown(){if(session.owner)await session.disconnect(session.owner);server.close();process.exit(0);}
 process.on('SIGTERM',shutdown);process.on('SIGINT',shutdown);

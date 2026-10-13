@@ -11,7 +11,7 @@ version = manifest['version']
 if not re.fullmatch(r'\d+\.\d+\.\d+', version):
     raise SystemExit('The plugin version must have three numeric components.')
 selected = {
-    'plugin.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
+    'plugin.json', 'mcp.json', 'README.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md',
     'package.json', 'package-lock.json', 'tsconfig.json', '.gitignore',
     'docs/RUNBOOK.md', 'docs/PLUGIN.md', 'docs/PRIVACY.md', 'docs/TERMS.md',
     'docs/EXECUTION.md', 'docs/device-setup-requirements.md', 'AGENTS.md',
@@ -19,6 +19,7 @@ selected = {
     'specs/002-browser-ipad-control/acceptance-report.md',
     'specs/002-browser-ipad-control/acceptance-results.json',
     'specs/002-browser-ipad-control/scope-amendment.md',
+    'scripts/build-mcp.mjs', 'scripts/verify-mcp.ts', 'scripts/verify-mcp-live.ts', 'scripts/package-plugin.py',
     'scripts/start.sh', 'scripts/start.ts', 'scripts/stop.sh', 'scripts/stop.ts',
     'scripts/doctor.ts', 'scripts/ios.sh', 'scripts/ios.py',
     'scripts/native-bridge.py', 'scripts/native-network.py',

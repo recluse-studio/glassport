@@ -1,7 +1,7 @@
 {
   "$schema": "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json",
   "name": "glassport",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Control a paired iPad in a local browser and bring native text, sketches and exported files into Codex.",
   "author": {
     "name": "Recluse Studio",
@@ -22,7 +22,7 @@
       "interface": {
         "displayName": "Glassport",
         "shortDescription": "Your iPad in Codex",
-        "longDescription": "Bring a paired physical iPad into a local browser pane. See and control its apps, type from your laptop, paste Unicode and multiline text, retrieve native copied text, capture sketches and notes, and import supported app exports. Glassport runs locally on an Apple Silicon Mac and uses a trusted iPad with iPadOS 27 or later and Developer Mode. Tailscale connects the paired devices; first-time pairing may require a one-time USB trust step. The Codex skill operates the same browser interface as the user. Private device state, pairing records and exports remain in the local installation. Audio and distinct-network routed operation are not certified in this preview. No OCR or emulator is used. Original project code is MIT; the adapted native bridge retains GPL-3.0-or-later.",
+        "longDescription": "Glassport combines a native iPad control application, a real local MCP server and a Codex workflow. Open the iPad in the browser and connect it, then use Glassport tools to inspect the current screen, tap or swipe, type and paste, retrieve public copied text, capture notes and sketches, browse supported Documents exports and import exact file bytes. MCP tools and browser controls share the same authenticated physical-device session. The server runs locally over stdio; device traffic uses the existing trusted pair and private Tailscale route. Apple Silicon macOS, Node 24+, iPadOS 27+ and Developer Mode are required. Private configuration, pairing and exports stay local. No OCR, emulator or implicit message submission is used. Original code is MIT; the adapted native bridge retains GPL-3.0-or-later.",
         "developerName": "Recluse Studio",
         "category": "Productivity",
         "capabilities": [
@@ -30,7 +30,8 @@
           "Type and paste into iPad apps",
           "Retrieve native copied text",
           "Capture sketches and notes",
-          "Import supported iPad exports"
+          "Import supported iPad exports",
+          "Native MCP tools sharing the browser session"
         ],
         "websiteURL": "https://github.com/recluse-studio/glassport",
         "supportURL": "https://github.com/recluse-studio/glassport/issues",
@@ -45,7 +46,7 @@
         "termsOfServiceURL": "https://github.com/recluse-studio/glassport/blob/main/docs/TERMS.md"
       },
       "publication": {
-        "release_notes": "Initial local preview: physical iPad browser display/control, laptop typing, native copy/paste, captures, ordered notes and verified export transfer."
+        "release_notes": "Real code-backed MCP server with authenticated local delegation to the existing browser-owned iPad session; direct image, copied-text and verified-file tool results."
       }
     }
   }
